@@ -7,14 +7,15 @@ package com.gridGame;
 
 import java.util.*;
 
-public class Game {
+class Game {
     private Board board;
-    private Random random = new Random();
 
     Game(int numberOfRows, int numberOfCols) {
         this.board = new Board(numberOfRows, numberOfCols);
 
         Position curPosition = new Position();
+
+        Random random = new Random();
 
         for(int i = 0; i < numberOfRows; i++) {
             for(int j = 0; j < numberOfCols; j++) {

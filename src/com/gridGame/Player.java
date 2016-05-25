@@ -10,7 +10,7 @@ class Player {
     private Position position;
     private int healthCount;
 
-    public Player(String name) {
+    Player(String name) {
         this.Playername = name;
         this.position = new Position(0, 0);
         this.healthCount = 10;
