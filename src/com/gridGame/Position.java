@@ -8,26 +8,26 @@ class Position {
     private int row;
     private int col;
 
-    Position() {
+    public Position() {
         this.row = 0;
         this.col = 0;
     }
 
-    Position(int rowNumber, int colNumber) {
+    public Position(int rowNumber, int colNumber) {
         this.row = rowNumber;
         this.col = colNumber;
     }
 
-    void setPosition(int rowNumber, int colNumber) {
+    public void setPosition(int rowNumber, int colNumber) {
         this.row = rowNumber;
         this.col = colNumber;
     }
 
-    int getRowNumber() {
+    public int getRowNumber() {
         return this.row;
     }
 
-    int getColNumber() {
+    public int getColNumber() {
         return this.col;
     }
 }

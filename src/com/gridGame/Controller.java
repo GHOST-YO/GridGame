@@ -8,7 +8,6 @@ package com.gridGame;
 import java.util.*;
 
 public class Controller {
-    private static Player player;
     private static Game game;
     private static Scanner scanner = new Scanner(System.in);
 
@@ -19,15 +18,13 @@ public class Controller {
         System.out.print("Enter you name: ");
         playerName = scanner.nextLine();
 
-        player = new Player(playerName);
-
         /**
          * Game
          */
 
-        int numberOfRows = 5, numberOfCols = 5;
+        int numberOfRows = 6, numberOfCols = 6, health = 10, level = 2;
 
-        game = new Game(numberOfRows, numberOfCols);
+        game = new Game(numberOfRows, numberOfCols, playerName, health, level);
 
         for(int i = 0; i < numberOfRows; ++i) {
             for(int j = 0; j < numberOfCols; ++j) {
@@ -41,42 +38,27 @@ public class Controller {
     }
 
     private static void startGame() {
-        while(true) {
-            int rowNumber = player.getPlayerPosition().getRowNumber();
-            int colNumber = player.getPlayerPosition().getColNumber();
 
-            if(game.getGameBoard().winCondition(player.getPlayerPosition()))
+        while(true) {
+
+            if(game.getGameStatus() != 0)
                 break;
 
             String nextMove = scanner.nextLine();
 
             if(nextMove.equals("w"))
-                rowNumber--;
+                game.playMove('U');
             else if(nextMove.equals("s"))
-                rowNumber++;
+                game.playMove('D');
             else if(nextMove.equals("a"))
-                colNumber--;
+                game.playMove('L');
             else
-                colNumber++;
-
-            if(game.getGameBoard().isValidLocation(new Position(rowNumber, colNumber))) {
-                player.setLocation(new Position(rowNumber, colNumber));
-
-                System.out.println("OK.. Valid move");
-            }
-            else {
-                player.setPlayerHealth(player.getPlayerHealth() - 1);
-
-                System.out.println("Sorry.. Invalid Location(Lost your Health)");
-                if(!player.isPositiveHealth()) {
-                    System.out.println("No Health Left. You lost");
-                    break;
-                }
-            }
-            System.out.println("Your Current Location - (" + player.getPlayerPosition().getRowNumber() + ", " + player.getPlayerPosition().getColNumber() + ")");
-            System.out.println("Current Health - " + player.getPlayerHealth());
+                game.playMove('R');
         }
-        if(player.isPositiveHealth())
+
+        if(game.getGameStatus() == 1)
             System.out.println("You Win");
+        else
+            System.out.println("You Lost");
     }
 }

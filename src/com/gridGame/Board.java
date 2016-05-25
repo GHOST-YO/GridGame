@@ -11,17 +11,17 @@ class Board {
 
     int[][] Grid;
 
-    Board(int rowCount, int colCount) {
+    public Board(int rowCount, int colCount) {
         this.numberOfRows = rowCount;
         this.numberOfCols = colCount;
 
         this.Grid = new int[rowCount][colCount];
     }
 
-    boolean isValidLocation(Position targetPosition) {
+    public boolean isValidLocation(Position targetPosition) {
         int rowNumber = targetPosition.getRowNumber();
         int colNumber = targetPosition.getColNumber();
-        if(rowNumber >= 0 && rowNumber < this.numberOfRows && colNumber >= 0 && colNumber < this.numberOfCols && this.Grid[rowNumber][colNumber] == 1) {
+        if(this.Grid[rowNumber][colNumber] == 0) {
             return true;
         }
         else {
@@ -29,24 +29,31 @@ class Board {
         }
     }
 
-    boolean isStartLocation(Position curPosition) {
+    public boolean outOfBoard(Position currentPosition) {
+        int rowNumber = currentPosition.getRowNumber();
+        int colNumber = currentPosition.getColNumber();
+
+        return (rowNumber < 0 || rowNumber >= this.numberOfRows || colNumber < 0 || colNumber >= this.numberOfCols);
+    }
+
+    public boolean isStartLocation(Position curPosition) {
         if(curPosition.getRowNumber() == 0 && curPosition.getColNumber() == 0)
             return true;
         return false;
     }
 
-    boolean isEndLocation(Position curPosition) {
-        if(curPosition.getRowNumber() == this.numberOfRows && curPosition.getColNumber() == this.numberOfCols)
+    public boolean isEndLocation(Position curPosition) {
+        if(curPosition.getRowNumber() == this.numberOfRows-1 && curPosition.getColNumber() == this.numberOfCols-1)
             return true;
         return false;
     }
 
-    void setGridCell(Position curPosition, int value) {
+    public void setGridCell(Position curPosition, int value) {
         this.Grid[curPosition.getRowNumber()][curPosition.getColNumber()] = value;
     }
 
-    boolean winCondition(Position curPosition) {
-        if(curPosition.getRowNumber() == this.numberOfRows && curPosition.getColNumber() == this.numberOfCols)
+    public boolean winCondition(Position curPosition) {
+        if(isEndLocation(curPosition))
             return true;
         else
             return false;
