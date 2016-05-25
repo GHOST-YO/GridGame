@@ -2,16 +2,15 @@ package com.gridGame;
 
 /**
  * Created by prashant.gu on 5/25/2016.
+ *
  */
 
 import java.util.*;
 
 public class Controller {
-    public static Player player;
-    public static Board board;
-
-    static Scanner scanner = new Scanner(System.in);
-    static Random random = new Random();
+    private static Player player;
+    private static Game game;
+    private static Scanner scanner = new Scanner(System.in);
 
     public static void main(String[] args) {
 
@@ -23,33 +22,16 @@ public class Controller {
         player = new Player(playerName);
 
         /**
-         * Board
+         * Game
          */
 
         int numberOfRows = 5, numberOfCols = 5;
 
-        board = new Board(numberOfRows, numberOfCols);
-
-        for(int i = 0; i < numberOfRows; i++) {
-            for(int j = 0; j < numberOfCols; j++) {
-
-                if(board.startLocation(i, j) || board.endLocation(i, j)) {
-                    board.setGridCell(i, j, 1);
-                    continue;
-                }
-
-                int choice = random.nextInt(5);
-
-                if(choice <= 1)
-                    board.setGridCell(i, j, 0);
-                else
-                    board.setGridCell(i, j, 1);
-            }
-        }
+        game = new Game(numberOfRows, numberOfCols);
 
         for(int i = 0; i < numberOfRows; ++i) {
             for(int j = 0; j < numberOfCols; ++j) {
-                System.out.print(board.Grid[i][j] + " ");
+                System.out.print(game.getGameBoard().Grid[i][j] + " ");
             }
             System.out.println();
         }
@@ -60,10 +42,10 @@ public class Controller {
 
     private static void startGame() {
         while(true) {
-            int rowNumber = player.getPlayerRow();
-            int colNumber = player.getPlayerCol();
+            int rowNumber = player.getPlayerPosition().getRowNumber();
+            int colNumber = player.getPlayerPosition().getColNumber();
 
-            if(board.winCondition(rowNumber, colNumber) == true)
+            if(game.getGameBoard().winCondition(player.getPlayerPosition()))
                 break;
 
             String nextMove = scanner.nextLine();
@@ -77,16 +59,24 @@ public class Controller {
             else
                 colNumber++;
 
-            if(board.isValidLocation(rowNumber, colNumber)) {
-                player.setLocation(rowNumber, colNumber);
+            if(game.getGameBoard().isValidLocation(new Position(rowNumber, colNumber))) {
+                player.setLocation(new Position(rowNumber, colNumber));
 
                 System.out.println("OK.. Valid move");
             }
             else {
-                System.out.println("Sorry.. Invalid Location");
+                player.setPlayerHealth(player.getPlayerHealth() - 1);
+
+                System.out.println("Sorry.. Invalid Location(Lost your Health)");
+                if(!player.isPositiveHealth()) {
+                    System.out.println("No Health Left. You lost");
+                    break;
+                }
             }
-            System.out.println("Your Current Location - (" + player.getPlayerRow() + ", " + player.getPlayerCol() + ")");
+            System.out.println("Your Current Location - (" + player.getPlayerPosition().getRowNumber() + ", " + player.getPlayerPosition().getColNumber() + ")");
+            System.out.println("Current Health - " + player.getPlayerHealth());
         }
-        System.out.println("You Win");
+        if(player.isPositiveHealth())
+            System.out.println("You Win");
     }
 }
