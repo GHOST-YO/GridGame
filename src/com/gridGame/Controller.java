@@ -43,22 +43,30 @@ public class Controller {
 
         while(true) {
 
-            if(game.getGameStatus() != 0)
+            if(game.getGameStatus() != GameStatus.PLAYING.getValue())
                 break;
 
             String nextMove = scanner.nextLine();
 
-            if(nextMove.equals("w"))
-                game.playMove('U');
-            else if(nextMove.equals("s"))
-                game.playMove('D');
-            else if(nextMove.equals("a"))
-                game.playMove('L');
-            else
-                game.playMove('R');
+            switch (nextMove) {
+                case "w":
+                    game.playMove('U');
+                    break;
+                case "s":
+                    game.playMove('D');
+                    break;
+                case "a":
+                    game.playMove('L');
+                    break;
+                case "d":
+                    game.playMove('R');
+                    break;
+                default:
+                    System.out.println("Invalid Keystroke");
+            }
         }
 
-        if(game.getGameStatus() == 1)
+        if(game.getGameStatus() == GameStatus.WIN.getValue())
             System.out.println("You Win");
         else
             System.out.println("You Lost");

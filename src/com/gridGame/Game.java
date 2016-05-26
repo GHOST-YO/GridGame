@@ -46,10 +46,10 @@ public class Game {
 
     public int getGameStatus() {
         if(!this.player.isPositiveHealth())
-            return -1;
+            return GameStatus.LOST.getValue();
         if(this.board.winCondition(this.player.getPlayerPosition()))
-            return 1;
-        return 0;
+            return GameStatus.WIN.getValue();
+        return GameStatus.PLAYING.getValue();
     }
 
     public void playMove(char dir) {
@@ -58,15 +58,19 @@ public class Game {
 
         Position newPosition = new Position();
 
-        if(dir == 'L')
-            newPosition.setPosition(currentRow, currentCol - this.player.getPlayerLevel());
-        else if(dir == 'R')
-            newPosition.setPosition(currentRow, currentCol + this.player.getPlayerLevel());
-        else if(dir == 'U')
-            newPosition.setPosition(currentRow - this.player.getPlayerLevel(), currentCol);
-        else
-            newPosition.setPosition(currentRow + this.player.getPlayerLevel(), currentCol);
-
+        switch(dir) {
+            case 'L':
+                newPosition.setPosition(currentRow, currentCol - this.player.getPlayerLevel());
+                break;
+            case 'R':
+                newPosition.setPosition(currentRow, currentCol + this.player.getPlayerLevel());
+                break;
+            case 'U':
+                newPosition.setPosition(currentRow - this.player.getPlayerLevel(), currentCol);
+                break;
+            default:
+                newPosition.setPosition(currentRow + this.player.getPlayerLevel(), currentCol);
+        }
         if(this.board.outOfBoard(newPosition)) {
             System.out.println("Out of Board Move.. Please play again");
             return;
@@ -84,7 +88,23 @@ public class Game {
         System.out.println("Current Health - " + this.player.getPlayerHealth());
     }
 
-    public boolean isValidLocation(int obstacleCost) {
+    private boolean isValidLocation(int obstacleCost) {
         return obstacleCost == Obstacles.OPEN.getObstacleCost();
+    }
+}
+
+enum GameStatus {
+    PLAYING (0),
+    WIN (1),
+    LOST (-1);
+
+    private final int gameStatus;
+
+    GameStatus(int status) {
+        this.gameStatus = status;
+    }
+
+    public int getValue() {
+        return this.gameStatus;
     }
 }
