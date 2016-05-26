@@ -5,7 +5,7 @@ package com.gridGame;
  *
  */
 
-class Player {
+public class Player {
     private String PlayerName;
     private Position position;
     private int healthCount;

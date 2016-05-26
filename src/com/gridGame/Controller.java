@@ -22,13 +22,15 @@ public class Controller {
          * Game
          */
 
-        int numberOfRows = 6, numberOfCols = 6, health = 10, level = 2;
+        int numberOfRows = 6, numberOfCols = 6, health = 10;
+        int level = PlayerLevel.AVERAGE.getPlayerLevel();
 
         game = new Game(numberOfRows, numberOfCols, playerName, health, level);
 
+
         for(int i = 0; i < numberOfRows; ++i) {
             for(int j = 0; j < numberOfCols; ++j) {
-                System.out.print(game.getGameBoard().Grid[i][j] + " ");
+                System.out.print(game.getGameBoard().getGrid()[i][j] + " ");
             }
             System.out.println();
         }

@@ -7,7 +7,7 @@ package com.gridGame;
 
 import java.util.*;
 
-class Game {
+public class Game {
     private Board board;
     private Player player;
 
@@ -24,18 +24,18 @@ class Game {
                 curPosition.setPosition(i, j);
 
                 if(this.board.isStartLocation(curPosition) || this.board.isEndLocation(curPosition)) {
-                    this.board.setGridCell(curPosition, 0);
+                    this.board.setGridCell(curPosition, Obstacles.OPEN.getObstacleCost());
                     continue;
                 }
 
                 int choice = random.nextInt(10);
 
                 if(choice <= 1)
-                    this.board.setGridCell(curPosition, -1);
+                    this.board.setGridCell(curPosition, Obstacles.WALL.getObstacleCost());
                 else if(choice <= 3)
-                    this.board.setGridCell(curPosition, -2);
+                    this.board.setGridCell(curPosition, Obstacles.MINE.getObstacleCost());
                 else
-                    this.board.setGridCell(curPosition, 0);
+                    this.board.setGridCell(curPosition, Obstacles.OPEN.getObstacleCost());
             }
         }
     }
@@ -72,15 +72,19 @@ class Game {
             return;
         }
 
-        if(this.board.isValidLocation(newPosition)) {
+        if(this.isValidLocation(this.board.getGrid()[newPosition.getRowNumber()][newPosition.getColNumber()])) {
             System.out.println("OK.. Valid Move");
             this.player.setLocation(newPosition);
         }
         else {
             System.out.println("Invalid Move. Lost Health");
-            this.player.setPlayerHealth(this.player.getPlayerHealth() + this.board.Grid[newPosition.getRowNumber()][newPosition.getColNumber()]);
+            this.player.setPlayerHealth(this.player.getPlayerHealth() + this.board.getGrid()[newPosition.getRowNumber()][newPosition.getColNumber()]);
         }
         System.out.println("Current Coordinate - (" + this.player.getPlayerPosition().getRowNumber() + ", " + this.player.getPlayerPosition().getColNumber()+ ")" );
         System.out.println("Current Health - " + this.player.getPlayerHealth());
+    }
+
+    public boolean isValidLocation(int obstacleCost) {
+        return obstacleCost == Obstacles.OPEN.getObstacleCost();
     }
 }

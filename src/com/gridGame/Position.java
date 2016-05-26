@@ -4,7 +4,7 @@ package com.gridGame;
  * Created by prashant.gu on 5/25/2016.
  *
  */
-class Position {
+public class Position {
     private int row;
     private int col;
 
