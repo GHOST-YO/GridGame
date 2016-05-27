@@ -58,16 +58,22 @@ public class Controller {
 
             if(view.equals(ViewName.TERMINAL))
                 terminalView.terminalInput();
-
-
+            else {
+                webView.setIsMoveComplete(false);
+                while(webView.getDirection().equals(Direction.NONE)) {}
+            }
+            System.out.println(webView.getDirection() + "\n"
+                    + webView.getPlayerMessage() + "\n"
+                    + webView.getIsMoveComplete());
             if(view.equals(ViewName.TERMINAL)) {
-                terminalView.playerMessage = game.playMove(terminalView.direction);
+                terminalView.setPlayerMessage(game.playMove(terminalView.getDirection()));
                 terminalView.terminalOutput();
             }
             else {
-                webView.playerMessage = game.playMove(webView.direction);
+                webView.setPlayerMessage(game.playMove(webView.getDirection()));
+                webView.setIsMoveComplete(true);
             }
-            System.out.println(webView.direction + " " + webView.playerMessage);
+            System.out.println(webView.getDirection() + " " + webView.getPlayerMessage());
         }
 
         if(game.getGameStatus().equals(GameStatus.WIN))
@@ -79,5 +85,5 @@ public class Controller {
 
 enum ViewName {
     WEB,
-    TERMINAL;
+    TERMINAL
 }

@@ -7,8 +7,24 @@ import java.util.Scanner;
  *
  */
 public class TerminalView {
-    Direction direction;
-    String playerMessage;
+    private Direction direction;
+    private String playerMessage;
+
+    public Direction getDirection() {
+        return direction;
+    }
+
+    public void setDirection(Direction direction) {
+        this.direction = direction;
+    }
+
+    public String getPlayerMessage() {
+        return playerMessage;
+    }
+
+    public void setPlayerMessage(String playerMessage) {
+        this.playerMessage = playerMessage;
+    }
 
     TerminalView() {
         this.direction = Direction.NONE;
