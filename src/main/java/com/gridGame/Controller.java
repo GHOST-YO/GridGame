@@ -15,6 +15,9 @@ import java.util.*;
 public class Controller {
     private static Game game;
     private static Scanner scanner = new Scanner(System.in);
+    private static WebView webView = new WebView();
+    private static TerminalView terminalView = new TerminalView();
+
 
     public static void main(String[] args) {
         SpringApplication.run(Controller.class, args);
@@ -46,29 +49,25 @@ public class Controller {
 
     private static void startGame() {
 
+        ViewName view = ViewName.WEB;
+
         while(true) {
 
             if(!game.getGameStatus().equals(GameStatus.PLAYING))
                 break;
 
-            String nextMove = scanner.nextLine();
+            if(view.equals(ViewName.TERMINAL))
+                terminalView.terminalInput();
 
-            switch (nextMove) {
-                case "w":
-                    game.playMove(Direction.UP);
-                    break;
-                case "s":
-                    game.playMove(Direction.DOWN);
-                    break;
-                case "a":
-                    game.playMove(Direction.LEFT);
-                    break;
-                case "d":
-                    game.playMove(Direction.RIGHT);
-                    break;
-                default:
-                    System.out.println("Invalid Keystroke");
+
+            if(view.equals(ViewName.TERMINAL)) {
+                terminalView.playerMessage = game.playMove(terminalView.direction);
+                terminalView.terminalOutput();
             }
+            else {
+                webView.playerMessage = game.playMove(webView.direction);
+            }
+            System.out.println(webView.direction + " " + webView.playerMessage);
         }
 
         if(game.getGameStatus().equals(GameStatus.WIN))
@@ -76,4 +75,9 @@ public class Controller {
         else
             System.out.println("You Lost");
     }
+}
+
+enum ViewName {
+    WEB,
+    TERMINAL;
 }

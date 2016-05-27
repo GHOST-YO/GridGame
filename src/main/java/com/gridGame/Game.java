@@ -52,7 +52,7 @@ public class Game {
         return GameStatus.PLAYING;
     }
 
-    public void playMove(Direction dir) {
+    public String playMove(Direction dir) {
         int currentRow = this.player.getPlayerPosition().getRowNumber();
         int currentCol = this.player.getPlayerPosition().getColNumber();
 
@@ -71,23 +71,27 @@ public class Game {
             default:
                 newPosition.setPosition(currentRow + this.player.getPlayerLevel(), currentCol);
         }
+
+        String returnMessage = "";
         if(this.board.outOfBoard(newPosition)) {
-            System.out.println("Out of Board Move.. Please play again");
-            return;
+            returnMessage += "Out of Board Move.. Please play again\n";
+            return returnMessage;
         }
 
         if(this.isValidLocation(this.board.getGrid()[newPosition.getRowNumber()][newPosition.getColNumber()])) {
-            System.out.println("OK.. Valid Move");
+            returnMessage += "OK.. Valid Move\n";
             this.player.setLocation(newPosition);
         }
         else {
-            System.out.println("Invalid Move. Lost Health");
+            returnMessage += "Invalid Move. Lost Health\n";
             this.player.setPlayerHealth(this.player.getPlayerHealth()
                     + this.board.getGrid()[newPosition.getRowNumber()][newPosition.getColNumber()].getObstacleCost());
         }
-        System.out.println("Current Coordinate - (" + this.player.getPlayerPosition().getRowNumber()
-                + ", " + this.player.getPlayerPosition().getColNumber()+ ")" );
-        System.out.println("Current Health - " + this.player.getPlayerHealth());
+        returnMessage += "Current Coordinate - (" + this.player.getPlayerPosition().getRowNumber()
+                + ", " + this.player.getPlayerPosition().getColNumber()+ ")\n"
+                + "Current Health - " + this.player.getPlayerHealth() + "\n";
+
+        return returnMessage;
     }
 
     private boolean isValidLocation(CellType cellType) {
@@ -105,5 +109,6 @@ enum Direction {
     UP,
     DOWN,
     LEFT,
-    RIGHT
+    RIGHT,
+    NONE
 }

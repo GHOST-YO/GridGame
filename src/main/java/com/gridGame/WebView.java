@@ -2,6 +2,7 @@ package com.gridGame;
 
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
 /**
@@ -9,8 +10,16 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
  *
  */
 
-@Controller
+@RestController
 public class WebView extends WebMvcConfigurerAdapter {
+
+    Direction direction;
+    String playerMessage;
+
+    WebView() {
+        this.direction = Direction.NONE;
+        this.playerMessage = "EMPTY MESSAGE";
+    }
 
     @RequestMapping(value="/")
     public String showForm() {
@@ -19,21 +28,25 @@ public class WebView extends WebMvcConfigurerAdapter {
 
     @RequestMapping(value="/UP")
     public String UpMove() {
-        return "DOWN";
+        this.direction = Direction.UP;
+        return this.playerMessage;
     }
 
     @RequestMapping(value="/RIGHT")
-    public String DownMove() {
-        return "RIGHT";
+    public String RIGHTMove() {
+        this.direction = Direction.RIGHT;
+        return this.playerMessage;
     }
 
     @RequestMapping(value="/LEFT")
     public String LeftMove() {
-        return "LEFT";
+        this.direction = Direction.LEFT;
+        return this.playerMessage;
     }
 
     @RequestMapping(value="/DOWN")
-    public String RightMove() {
-        return "DOWN";
+    public String DownMove() {
+        this.direction = Direction.DOWN;
+        return this.playerMessage;
     }
 }
