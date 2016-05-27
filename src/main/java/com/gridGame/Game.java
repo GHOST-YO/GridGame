@@ -11,6 +11,10 @@ public class Game {
     private Board board;
     private Player player;
 
+    public Player getPlayer() {
+        return player;
+    }
+
     public Game(int numberOfRows, int numberOfCols, String playerName, int health, int level) {
         this.board = new Board(numberOfRows, numberOfCols);
         this.player = new Player(playerName, health, level);
@@ -52,7 +56,7 @@ public class Game {
         return GameStatus.PLAYING;
     }
 
-    public String playMove(Direction dir) {
+    public GameMessage playMove(Direction dir) {
         int currentRow = this.player.getPlayerPosition().getRowNumber();
         int currentCol = this.player.getPlayerPosition().getColNumber();
 
@@ -74,29 +78,67 @@ public class Game {
 
         String returnMessage = "";
         if(this.board.outOfBoard(newPosition)) {
-            returnMessage += "Out of Board Move.. Please play again\n";
-            return returnMessage;
+            return new GameMessage(GameStatus.PLAYING, MoveStatus.OUT_OF_BOARD, this.player);
         }
 
         if(this.isValidLocation(this.board.getGrid()[newPosition.getRowNumber()][newPosition.getColNumber()])) {
-            returnMessage += "OK.. Valid Move\n";
             this.player.setLocation(newPosition);
+            return new GameMessage(GameStatus.PLAYING, MoveStatus.OK, this.player);
         }
         else {
-            returnMessage += "Invalid Move. Lost Health\n";
             this.player.setPlayerHealth(this.player.getPlayerHealth()
                     + this.board.getGrid()[newPosition.getRowNumber()][newPosition.getColNumber()].getObstacleCost());
+            return  new GameMessage(GameStatus.PLAYING, MoveStatus.OBSTACLE, this.player);
         }
-        returnMessage += "Current Coordinate - (" + this.player.getPlayerPosition().getRowNumber()
-                + ", " + this.player.getPlayerPosition().getColNumber()+ ")\n"
-                + "Current Health - " + this.player.getPlayerHealth() + "\n";
-
-        return returnMessage;
     }
 
     private boolean isValidLocation(CellType cellType) {
         return cellType.equals(CellType.OPEN);
     }
+}
+
+class GameMessage {
+    GameStatus gameStatus;
+
+    public GameStatus getGameStatus() {
+        return gameStatus;
+    }
+
+    public void setGameStatus(GameStatus gameStatus) {
+        this.gameStatus = gameStatus;
+    }
+
+    public MoveStatus getMoveStatus() {
+        return moveStatus;
+    }
+
+    public void setMoveStatus(MoveStatus moveStatus) {
+        this.moveStatus = moveStatus;
+    }
+
+    public Player getPlayer() {
+        return player;
+    }
+
+    public void setPlayer(Player player) {
+        this.player = player;
+    }
+
+    MoveStatus moveStatus;
+    Player player;
+
+    public GameMessage(GameStatus gameStatus, MoveStatus moveStatus, Player player) {
+        this.gameStatus = gameStatus;
+        this.moveStatus = moveStatus;
+        this.player = player;
+    }
+}
+
+enum MoveStatus {
+    OK,
+    OBSTACLE,
+    OUT_OF_BOARD,
+    NONE
 }
 
 enum GameStatus {

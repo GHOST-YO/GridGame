@@ -1,17 +1,10 @@
 package com.gridGame;
 
-import com.sun.org.apache.xpath.internal.SourceTree;
+import org.codehaus.jackson.annotate.JsonAutoDetect;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.boot.jta.bitronix.PoolingConnectionFactoryBean;
-import org.springframework.util.AntPathMatcher;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.servlet.HandlerMapping;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
-
-import javax.servlet.http.HttpServletRequest;
 
 /**
  * Created by prashant.gu on 5/26/2016.
@@ -23,40 +16,89 @@ import javax.servlet.http.HttpServletRequest;
 @ResponseBody
 public class WebView extends WebMvcConfigurerAdapter implements InputInterface{
 
-    private boolean waitBool;
-    private Direction direction = Direction.NONE;
-    private String playerMessage = "EMPTY MESSAGE";
-    private String playerName = "";
+    private Game game;
 
+    public WebView() {
 
-
-    @Override
-    public String getPlayerName() {
-        System.out.println("waiting For Player Name");
-        this.waitBool = true;
-
-        while(waitBool) {}
-
-        return playerName;
     }
 
     @Override
-    public Direction getDirection() {
-        System.out.println("Waiting to get Directions");
-
-        this.waitBool = true;
-        while(this.waitBool) {}
-
-        return null;
+    public void startGame() {
+        System.out.println("IN WebView");
+        for(int i = 0; i < game.getGameBoard().getNumberOfRows(); ++i) {
+            for(int j = 0; j < game.getGameBoard().getNumberOfCols(); ++j) {
+                System.out.print(game.getGameBoard().getGrid()[i][j] + " ");
+            }
+            System.out.println();
+        }
     }
 
-    @Override
-    @RequestMapping(value="/result")
-    public String printPlayerMessage(String playerMessage) {
+    @RequestMapping(value="/name/{playerName}/{playerHealth}/{playerLevel}", produces = "application/json")
+    @ResponseBody
+    public GameMessage initialize(@PathVariable String playerName,
+                                  @PathVariable int playerHealth,
+                                  @PathVariable String playerLevel) {
+        int numberOfRows = 6, numberOfCols = 6;
+
+        playerLevel = playerLevel.toUpperCase();
+
+        int level = 1;
+        switch (playerLevel) {
+            case "STARTER":
+                level = 1;
+                break;
+            case "AVERAGE":
+                level = 2;
+                break;
+            case "GOOD":
+                level = 3;
+                break;
+            case "EXPERIENCED":
+                level = 4;
+                break;
+            case "PRO":
+                level = 5;
+                break;
+        }
+
+        game = new Game(numberOfRows, numberOfCols, playerName, playerHealth, level);
+        return new GameMessage(game.getGameStatus(), MoveStatus.NONE, game.getPlayer());
+    }
+
+    @RequestMapping(value="/{dir}", produces = "application/json")
+    @ResponseBody
+    public GameMessage move(@PathVariable String dir) {
+
+        dir = dir.toUpperCase();
+        Direction direction = null;
+
+        switch(dir) {
+            case "UP":
+                direction = Direction.UP;
+                break;
+            case "DOWN":
+                direction = Direction.DOWN;
+                break;
+            case "LEFT":
+                direction = Direction.LEFT;
+                break;
+            case "RIGHT":
+                direction = Direction.RIGHT;
+                break;
+        }
+        System.out.println(direction);
+        GameMessage playerMessage = game.playMove(direction);
+
+        System.out.println(playerMessage.gameStatus);
+        System.out.println(playerMessage.moveStatus);
+        System.out.println(playerMessage.player.getPlayerHealth());
+        System.out.println("(" + playerMessage.player.getPlayerPosition().getRowNumber() + ", "
+                + playerMessage.player.getPlayerPosition().getColNumber() + ")");
+
         return playerMessage;
     }
 
-    @RequestMapping(value="/{id}/**")
+    /*@RequestMapping(value="/{id}/**")
     public String newName(@PathVariable("id") String id, HttpServletRequest request) {
         String path = (String) request.getAttribute(
                 HandlerMapping.PATH_WITHIN_HANDLER_MAPPING_ATTRIBUTE);
@@ -68,30 +110,5 @@ public class WebView extends WebMvcConfigurerAdapter implements InputInterface{
         playerName = finalPath;
 
         return finalPath;
-    }
-
-    @RequestMapping(value="/{direction}")
-    public String move(@PathVariable String direction, HttpServletRequest request) {
-
-        direction = direction.toUpperCase();
-
-        switch(direction) {
-            case "UP":
-                this.direction = Direction.UP;
-                break;
-            case "DOWN":
-                this.direction = Direction.DOWN;
-                break;
-            case "LEFT":
-                this.direction = Direction.LEFT;
-                break;
-            case "RIGHT":
-                this.direction = Direction.RIGHT;
-                break;
-        }
-
-        this.direction = Direction.UP;
-        this.waitBool = false;
-        return "Moving " + direction;
-    }
+    }*/
 }

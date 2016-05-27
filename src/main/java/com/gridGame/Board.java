@@ -46,4 +46,12 @@ public class Board {
     public CellType[][] getGrid() {
         return this.grid;
     }
+
+    public int getNumberOfRows() {
+        return numberOfRows;
+    }
+
+    public int getNumberOfCols() {
+        return numberOfCols;
+    }
 }

@@ -7,10 +7,8 @@ package com.gridGame;
 
 public interface InputInterface {
 
+    void startGame();
 
-    String getPlayerName();
-    Direction getDirection();
-    String printPlayerMessage(String playerMessage);
 }
 
 
