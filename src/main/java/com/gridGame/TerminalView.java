@@ -6,52 +6,38 @@ import java.util.Scanner;
  * Created by prashant.gu on 5/26/2016.
  *
  */
-public class TerminalView {
-    private Direction direction;
-    private String playerMessage;
+public class TerminalView implements InputInterface{
 
+    Scanner scanner = new Scanner(System.in);
+
+    @Override
+    public String getPlayerName() {
+        System.out.println("Enter player Name");
+        return scanner.nextLine();
+    }
+
+    @Override
     public Direction getDirection() {
-        return direction;
-    }
-
-    public void setDirection(Direction direction) {
-        this.direction = direction;
-    }
-
-    public String getPlayerMessage() {
-        return playerMessage;
-    }
-
-    public void setPlayerMessage(String playerMessage) {
-        this.playerMessage = playerMessage;
-    }
-
-    TerminalView() {
-        this.direction = Direction.NONE;
-        this.playerMessage = "EMPTY MESSAGE";
-    }
-
-    public void terminalInput() {
-        Scanner scanner = new Scanner(System.in);
-
+        System.out.print("Enter the direction to move(a,w,s,d): ");
         String dir = scanner.nextLine();
 
         switch(dir) {
             case "w":
-                this.direction = Direction.UP;
-                break;
-            case "a":
-                this.direction = Direction.LEFT;
-                break;
+                return Direction.UP;
             case "s":
-                this.direction = Direction.DOWN;
-                break;
+                return Direction.DOWN;
+            case "a":
+                return Direction.LEFT;
             case "d":
-                this.direction = Direction.RIGHT;
+                return Direction.RIGHT;
+            default:
+                return Direction.NONE;
         }
     }
 
-    public void terminalOutput() {
-        System.out.println(this.playerMessage);
+    @Override
+    public String printPlayerMessage(String playerMessage) {
+        System.out.println(playerMessage);
+        return "";
     }
 }

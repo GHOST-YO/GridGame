@@ -8,6 +8,7 @@ package com.gridGame;
 
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.web.WebMvcProperties;
 
 import java.util.*;
 
@@ -44,36 +45,27 @@ public class Controller {
         }
 
 
-        startGame();
+        ViewName view = ViewName.WEB;
+
+        switch (view) {
+            case TERMINAL:
+                startGame(terminalView);
+                break;
+            case WEB:
+                startGame(webView);
+                break;
+        }
     }
 
-    private static void startGame() {
-
-        ViewName view = ViewName.WEB;
+    private static void startGame(InputInterface inputModel) {
 
         while(true) {
 
             if(!game.getGameStatus().equals(GameStatus.PLAYING))
                 break;
 
-            if(view.equals(ViewName.TERMINAL))
-                terminalView.terminalInput();
-            else {
-                webView.setIsMoveComplete(false);
-                while(webView.getDirection().equals(Direction.NONE)) {}
-            }
-            System.out.println(webView.getDirection() + "\n"
-                    + webView.getPlayerMessage() + "\n"
-                    + webView.getIsMoveComplete());
-            if(view.equals(ViewName.TERMINAL)) {
-                terminalView.setPlayerMessage(game.playMove(terminalView.getDirection()));
-                terminalView.terminalOutput();
-            }
-            else {
-                webView.setPlayerMessage(game.playMove(webView.getDirection()));
-                webView.setIsMoveComplete(true);
-            }
-            System.out.println(webView.getDirection() + " " + webView.getPlayerMessage());
+            inputModel.printPlayerMessage(game.playMove(inputModel.getDirection()));
+
         }
 
         if(game.getGameStatus().equals(GameStatus.WIN))
