@@ -1,6 +1,5 @@
 package com.gridGame;
 
-import org.codehaus.jackson.annotate.JsonAutoDetect;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.stereotype.Controller;
@@ -17,10 +16,6 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
 public class WebView extends WebMvcConfigurerAdapter implements InputInterface{
 
     private Game game;
-
-    public WebView() {
-
-    }
 
     @Override
     public void startGame() {
@@ -89,26 +84,12 @@ public class WebView extends WebMvcConfigurerAdapter implements InputInterface{
         System.out.println(direction);
         GameMessage playerMessage = game.playMove(direction);
 
-        System.out.println(playerMessage.gameStatus);
-        System.out.println(playerMessage.moveStatus);
-        System.out.println(playerMessage.player.getPlayerHealth());
-        System.out.println("(" + playerMessage.player.getPlayerPosition().getRowNumber() + ", "
-                + playerMessage.player.getPlayerPosition().getColNumber() + ")");
+        System.out.println(playerMessage.getGameStatus());
+        System.out.println(playerMessage.getMoveStatus());
+        System.out.println(playerMessage.getPlayer().getPlayerHealth());
+        System.out.println("(" + playerMessage.getPlayer().getPlayerPosition().getRowNumber() + ", "
+                + playerMessage.getPlayer().getPlayerPosition().getColNumber() + ")");
 
         return playerMessage;
     }
-
-    /*@RequestMapping(value="/{id}/**")
-    public String newName(@PathVariable("id") String id, HttpServletRequest request) {
-        String path = (String) request.getAttribute(
-                HandlerMapping.PATH_WITHIN_HANDLER_MAPPING_ATTRIBUTE);
-        String bestMatchPattern = (String ) request.getAttribute(HandlerMapping.BEST_MATCHING_PATTERN_ATTRIBUTE);
-
-        AntPathMatcher apm = new AntPathMatcher();
-        String finalPath = apm.extractPathWithinPattern(bestMatchPattern, path);
-
-        playerName = finalPath;
-
-        return finalPath;
-    }*/
 }

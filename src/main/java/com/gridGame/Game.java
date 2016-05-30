@@ -98,7 +98,9 @@ public class Game {
 }
 
 class GameMessage {
-    GameStatus gameStatus;
+    private GameStatus gameStatus;
+    private MoveStatus moveStatus;
+    private Player player;
 
     public GameStatus getGameStatus() {
         return gameStatus;
@@ -124,8 +126,6 @@ class GameMessage {
         this.player = player;
     }
 
-    MoveStatus moveStatus;
-    Player player;
 
     public GameMessage(GameStatus gameStatus, MoveStatus moveStatus, Player player) {
         this.gameStatus = gameStatus;

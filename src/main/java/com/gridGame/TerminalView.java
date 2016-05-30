@@ -75,10 +75,10 @@ public class TerminalView implements InputInterface{
     }
 
     private void printPlayerMessage(GameMessage playerMessage) {
-        System.out.println(playerMessage.gameStatus);
-        System.out.println(playerMessage.moveStatus);
-        System.out.println(playerMessage.player.getPlayerHealth());
-        System.out.println("(" + playerMessage.player.getPlayerPosition().getRowNumber() + ", "
-                + playerMessage.player.getPlayerPosition().getColNumber() + ")");
+        System.out.println(playerMessage.getGameStatus());
+        System.out.println(playerMessage.getMoveStatus());
+        System.out.println(playerMessage.getPlayer().getPlayerHealth());
+        System.out.println("(" + playerMessage.getPlayer().getPlayerPosition().getRowNumber() + ", "
+                + playerMessage.getPlayer().getPlayerPosition().getColNumber() + ")");
     }
 }
